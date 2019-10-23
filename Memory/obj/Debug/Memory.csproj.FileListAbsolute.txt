@@ -1,0 +1,11 @@
+D:\School\OOP\Assignment\Memory\Memory\bin\Debug\Memory.exe.config
+D:\School\OOP\Assignment\Memory\Memory\bin\Debug\Memory.exe
+D:\School\OOP\Assignment\Memory\Memory\bin\Debug\Memory.pdb
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.csprojAssemblyReference.cache
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.Properties.Resources.resources
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.csproj.GenerateResource.cache
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.csproj.CoreCompileInputs.cache
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.exe
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.pdb
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.GameBoard.resources
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.g.resources
