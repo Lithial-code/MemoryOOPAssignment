@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameBoard));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -75,6 +76,8 @@
             this.pb18 = new System.Windows.Forms.PictureBox();
             this.pb12 = new System.Windows.Forms.PictureBox();
             this.pb6 = new System.Windows.Forms.PictureBox();
+            this.WaitTimer = new System.Windows.Forms.Timer(this.components);
+            this.GameTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pb1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb3)).BeginInit();
@@ -189,6 +192,7 @@
             this.btn_new_game.TabIndex = 11;
             this.btn_new_game.Text = "New Game";
             this.btn_new_game.UseVisualStyleBackColor = true;
+            this.btn_new_game.Click += new System.EventHandler(this.NewGameEvent);
             // 
             // btn_instructions
             // 
@@ -207,6 +211,7 @@
             this.btn_quit.TabIndex = 13;
             this.btn_quit.Text = "Quit";
             this.btn_quit.UseVisualStyleBackColor = true;
+            this.btn_quit.Click += new System.EventHandler(this.QuitGameEvent);
             // 
             // pb1
             // 
@@ -604,6 +609,16 @@
             this.pb6.TabStop = false;
             this.pb6.Click += new System.EventHandler(this.CardClickEvent);
             // 
+            // WaitTimer
+            // 
+            this.WaitTimer.Interval = 800;
+            this.WaitTimer.Tick += new System.EventHandler(this.CardFlipTimerEvent);
+            // 
+            // GameTimer
+            // 
+            this.GameTimer.Interval = 1000;
+            this.GameTimer.Tick += new System.EventHandler(this.GameTimeCounterEvent);
+            // 
             // GameBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -745,6 +760,8 @@
         private System.Windows.Forms.PictureBox pb18;
         private System.Windows.Forms.PictureBox pb12;
         private System.Windows.Forms.PictureBox pb6;
+        private System.Windows.Forms.Timer WaitTimer;
+        private System.Windows.Forms.Timer GameTimer;
     }
 }
 

@@ -11,7 +11,10 @@ namespace Memory
      class GameManager
     {
         static Deck _deck;
-        DateTime timer;
+        bool _gameStart;
+        int _seconds;
+        int _minutes;
+        int _cardCount;
         string _playerName;
         static HighScore[] _highScores;
 
@@ -26,8 +29,13 @@ namespace Memory
             _highScores = new HighScore[10];
             PictureBoxes = new List<PictureBox>() { };
             Labels = new List<Label>();
+            Seconds = 0;
+            CardCount = Deck.Count() /2;
         }
 
+        /// <summary>
+        /// Called at Game Start. Shuffles deck and sets lables to appropriate values
+        /// </summary>
         public void SetupBoard()
         {
             Deck.UsableDeck = Deck.Shuffle();
@@ -39,16 +47,16 @@ namespace Memory
             //reset timer to 0
             Labels[0].Text = "0";
             //reset card count
-            Labels[1].Text = Deck.Count().ToString();
+            Labels[1].Text = CardCount.ToString();
         }
         public void Start()
         {
         
 
         }
-        public bool docardsmatch()
+        public bool DoCardsMatch()
         {
-            return FirstCard == SecondCard;
+            return FirstCard.ImageLocation == SecondCard.ImageLocation;
         }
 
         public void FlipCards(Card card)
@@ -69,12 +77,22 @@ namespace Memory
             FirstCard = null;
             SecondCard = null;
         }
+        public void RemoveCardsAndPictureBoxes(Card card)
+        {
+            card.Pb.Enabled = false;
+            card.Pb.Visible = false;
+        }
         public void LowerCardCount()
         {
-
+            CardCount--;
+            Labels[1].Text = CardCount.ToString();
         }
         public bool IsGameFinished()
         {
+            if (CardCount == 0)
+            {
+                return true;
+            }
             return false;
         }
         public void CheckBestScore()
@@ -95,17 +113,32 @@ namespace Memory
         }
         public void ResetBoard()
         {
-
+            foreach (PictureBox pictureBox in pictureBoxes)
+            {
+                pictureBox.Enabled = true;
+                pictureBox.Visible = true;
+                pictureBox.Image = Properties.Resources.deck;
+            }
         }
 
         ////////////////////////////////////////////////////////////////
         //Added after planning
         ////////////////////////////////////////////////////////////////
+        #region getters and setters
         public Card FirstCard { get => _firstCard; set => _firstCard = value; }
         public Card SecondCard { get => _secondCard; set => _secondCard = value; }
         public List<PictureBox> PictureBoxes { get => pictureBoxes; set => pictureBoxes = value; }
         public Deck Deck { get => _deck; set => _deck = value; }
+        /// <summary>
+        /// [0] is time
+        /// [1] is cardcount
+        /// </summary>
         public List<Label> Labels { get => labels; set => labels = value; }
+        public int Seconds { get => _seconds; set => _seconds = value; }
+        public int Minutes { get => _minutes; set => _minutes = value; }
+        public int CardCount { get => _cardCount; set => _cardCount = value; }
+        public bool GameStart { get => _gameStart; set => _gameStart = value; }
+        #endregion
 
         public Card CardByPBID(PictureBox pb)
         {
