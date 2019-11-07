@@ -81,6 +81,7 @@
             this.pb15 = new System.Windows.Forms.PictureBox();
             this.pb14 = new System.Windows.Forms.PictureBox();
             this.pb13 = new System.Windows.Forms.PictureBox();
+            this.btn_stop = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb5)).BeginInit();
@@ -259,6 +260,7 @@
             this.btn_cheat.TabIndex = 50;
             this.btn_cheat.Text = "Cheat Win";
             this.btn_cheat.UseVisualStyleBackColor = false;
+            this.btn_cheat.Visible = false;
             this.btn_cheat.Click += new System.EventHandler(this.Btn_cheat_Click);
             // 
             // HintTimer
@@ -791,12 +793,25 @@
             this.pb13.TabStop = false;
             this.pb13.Click += new System.EventHandler(this.CardClickEvent);
             // 
+            // btn_stop
+            // 
+            this.btn_stop.BackColor = System.Drawing.Color.Turquoise;
+            this.btn_stop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btn_stop.Location = new System.Drawing.Point(1077, 349);
+            this.btn_stop.Name = "btn_stop";
+            this.btn_stop.Size = new System.Drawing.Size(103, 23);
+            this.btn_stop.TabIndex = 52;
+            this.btn_stop.Text = "Stop";
+            this.btn_stop.UseVisualStyleBackColor = false;
+            this.btn_stop.Click += new System.EventHandler(this.Stop);
+            // 
             // GameBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSeaGreen;
             this.ClientSize = new System.Drawing.Size(1292, 1061);
+            this.Controls.Add(this.btn_stop);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.btn_cheat);
             this.Controls.Add(this.btn_quit);
@@ -905,6 +920,7 @@
         private System.Windows.Forms.Button btn_cheat;
         private System.Windows.Forms.Timer HintTimer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button btn_stop;
     }
 }
 

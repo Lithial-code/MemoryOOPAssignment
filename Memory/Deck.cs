@@ -7,22 +7,23 @@ using System.Windows.Forms;
 
 namespace Memory
 {
+    //Done and commented
     public class Deck
     {
-        string _deckBackImageLocation;
         List<Card> _usableDeck;
 
+        /// <summary>
+        /// Deck constructor. Makes one new deck
+        /// </summary>
         public Deck()
         {
-            DeckBackImageLocation = "deck";
             UsableDeck = new List<Card>();
             BuildDeck();
             UsableDeck = Shuffle(UsableDeck);
         }
-
-        public string DeckBackImageLocation { get => _deckBackImageLocation; set => _deckBackImageLocation = value; }
+        #region properties
         public List<Card> UsableDeck { get => _usableDeck; set => _usableDeck = value; }
-      
+        #endregion
         /// <summary>
         /// adds all cards twice to the deck
         /// </summary>
@@ -79,21 +80,26 @@ namespace Memory
         /// <returns></returns>
         public List<Card> Shuffle(List<Card> deck)
         {
+            //create temp deck
             List<Card> shuffledDeck = new List<Card>();
             Random rand = new Random();
 
+            //while origional deck still has cards in it
             int index = 0;
             while (deck.Count > 0)
             {
+                //pick a random number between 0 and how many cards are left
                 index = rand.Next(0, deck.Count);
-
+                //add that card to the temp deck
                 shuffledDeck.Add(IndexOf(index));
+                //remove it from the old one
                 RemoveCard(index);
             }
-            foreach (Card card in shuffledDeck)
-            {
-                Console.WriteLine(card.Name);
-            }
+            //foreach (Card card in shuffledDeck)
+            //{
+            //    Console.WriteLine(card.Name);
+            //}
+            //return the shuffled deck
             return shuffledDeck;
         }
     }

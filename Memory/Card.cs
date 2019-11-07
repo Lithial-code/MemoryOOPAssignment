@@ -7,6 +7,7 @@ using System.Windows.Forms;
 
 namespace Memory
 {
+    //Done and commented
     public class Card
     {
         string _name;

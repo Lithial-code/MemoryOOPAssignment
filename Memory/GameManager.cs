@@ -40,8 +40,7 @@ namespace Memory
         {
 
             PictureBoxes = new List<PictureBox>() { };
-            Labels = new List<Label>();
-           
+            Labels = new List<Label>();    
             Timers = new List<Timer>();
             NameLabels = new List<Label>();
             ScoreLabels = new List<Label>();
@@ -56,6 +55,7 @@ namespace Memory
         /// </summary>
         public void SetupBoard()
         {
+            //full board reset
             Seconds = 0;
             ResetBoard();
             Deck = new Deck();
@@ -67,7 +67,7 @@ namespace Memory
                 Deck.UsableDeck[i].Pb = PictureBoxes[i];
             }
             //reset timer to 0
-            Labels[0].Text = "0";
+            Labels[0].Text = "00:00:00";
             //reset card count
             Labels[1].Text = CardCount.ToString();
         }
