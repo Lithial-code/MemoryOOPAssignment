@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Memory
 {
-    class Card
+    public class Card
     {
         string _name;
         string _imageLocation;

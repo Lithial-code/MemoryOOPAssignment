@@ -6,21 +6,46 @@ using System.Threading.Tasks;
 
 namespace Memory
 {
-    class HighScore
+    public class HighScore
     {
         string _name;
-        int _position;
-        string _time;
+        int _time;
 
-        public HighScore(string name, int position, string time)
+        [Newtonsoft.Json.JsonConstructor]
+        public HighScore(string name, int time)
         {
             Name = name;
-            Position = position;
             Time = time;
         }
+        public HighScore()
+        {
 
+        }
+        public HighScore(int time) : this("", time) { }
+    
+        public string ToReadable()
+        {
+            string results = "";
+            int mins = 0;
+            int seconds = 0;
+            mins = Time / 60;
+            seconds = Time % 60;
+
+            results = string.Format("{0}:{1}:00",mins.ToString("D2"),seconds.ToString("D2"));
+            return results;
+        }
+        public bool Compare(HighScore score)
+        {
+            if (this.Time > score.Time)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public string Name { get => _name; set => _name = value; }
-        public int Position { get => _position; set => _position = value; }
-        public string Time { get => _time; set => _time = value; }
+        public int Time { get => _time; set => _time = value; }
     }
 }

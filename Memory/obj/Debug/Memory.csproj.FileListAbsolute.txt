@@ -9,3 +9,8 @@ D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.exe
 D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.pdb
 D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.GameBoard.resources
 D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.g.resources
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.HighScoreForm.resources
+D:\School\OOP\Assignment\Memory\Memory\bin\Debug\Newtonsoft.Json.dll
+D:\School\OOP\Assignment\Memory\Memory\bin\Debug\Newtonsoft.Json.xml
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.csproj.CopyComplete
+D:\School\OOP\Assignment\Memory\Memory\obj\Debug\Memory.csproj.ResolveComReference.cache

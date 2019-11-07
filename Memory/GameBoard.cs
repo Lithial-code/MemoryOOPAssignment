@@ -11,14 +11,27 @@ namespace Memory
     public partial class GameBoard : Form
     {
 
-        GameManager gameManager = new GameManager();
+        public GameManager GameManager;
         List<PictureBox> pictureBoxes;
+        public static HighScoreForm highScoreForm;
+
+        List<Label> _nameLabels;
+        List<Label> _scoreLabels;
+
+        //internal GameManager GameManager { get => GameManager; set => GameManager = value; }
 
         public GameBoard()
-        {
+        { 
             InitializeComponent();
-            pictureBoxes = new List<PictureBox>() { pb1, pb2,pb3, pb4, pb5, pb6, pb7, pb8, pb9, pb10, pb11, pb12, pb13, pb14, pb15, pb16, pb17, pb18, pb19, pb20, pb21, pb22, pb23, pb24, pb25, pb26, pb27, pb28, pb29, pb30, pb31, pb32, pb33, pb34, pb35, pb36};
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
+            GameManager = new GameManager();
+            pictureBoxes = new List<PictureBox>() { pb1, pb2, pb3, pb4, pb5, pb6, pb7, pb8, pb9, pb10, pb11, pb12, pb13, pb14, pb15, pb16, pb17, pb18, pb19, pb20, pb21, pb22, pb23, pb24, pb25, pb26, pb27, pb28, pb29, pb30, pb31, pb32, pb33, pb34, pb35, pb36 };
+          
+            highScoreForm = new HighScoreForm();
             AssembleComponents();
+            GameManager.LoadScores();
+
         }
         #region methods
         /// <summary>
@@ -28,10 +41,15 @@ namespace Memory
         {
             foreach (var pb in pictureBoxes)
             {
-                gameManager.PictureBoxes.Add(pb);
+                GameManager.PictureBoxes.Add(pb);
             }
-            gameManager.Labels.Add(lbl_time);
-            gameManager.Labels.Add(lbl_cards_remaining);
+            GameManager.Labels.Add(lbl_time);
+            GameManager.Labels.Add(lbl_cards_remaining);
+            GameManager.Timers.Add(GameTimer);
+            GameManager.Timers.Add(HintTimer);
+       
+       
+            // highScoreForm.AssembleFakeScores();
         }
         #endregion
 
@@ -46,26 +64,30 @@ namespace Memory
         /// <param name="e"></param>
         private void CardClickEvent(object sender, EventArgs e)
         {
-            if (gameManager.FirstCard == null && gameManager.SecondCard == null)
+            if (GameManager.GameStart)
             {
-                gameManager.FirstCard = gameManager.CardByPBID((PictureBox)sender);
-               // Console.WriteLine("click 1: pass 1 " + gameManager.FirstCard.Name);
-                gameManager.FlipCards(gameManager.FirstCard);
-   
-                
-            }
-            else if (gameManager.FirstCard != null && gameManager.SecondCard == null)
-            {
-                gameManager.SecondCard = gameManager.CardByPBID((PictureBox)sender);
-                gameManager.FlipCards(gameManager.SecondCard);
 
-                //Console.WriteLine("Second card: "+gameManager.SecondCard.ImageLocation);
-                //gameManager.SecondCard.Pb.Image = (Bitmap)Properties.Resources.ResourceManager.GetObject(gameManager.SecondCard.ImageLocation);
-                Console.WriteLine("Sleep now");
-                WaitTimer.Start();
-            
-            }
 
+                if (GameManager.FirstCard == null && GameManager.SecondCard == null)
+                {
+                    GameManager.FirstCard = GameManager.CardByPBID((PictureBox)sender);
+                    // Console.WriteLine("click 1: pass 1 " + gameManager.FirstCard.Name);
+                    GameManager.FlipCards(GameManager.FirstCard);
+
+
+                }
+                else if (GameManager.FirstCard != null && GameManager.SecondCard == null)
+                {
+                    GameManager.SecondCard = GameManager.CardByPBID((PictureBox)sender);
+                    GameManager.FlipCards(GameManager.SecondCard);
+
+                    //Console.WriteLine("Second card: "+gameManager.SecondCard.ImageLocation);
+                    //gameManager.SecondCard.Pb.Image = (Bitmap)Properties.Resources.ResourceManager.GetObject(gameManager.SecondCard.ImageLocation);
+                    Console.WriteLine("Sleep now");
+                    WaitTimer.Start();
+
+                }
+            }
         }
 
         /// <summary>
@@ -75,25 +97,31 @@ namespace Memory
         /// <param name="e"></param>
         private void CardFlipTimerEvent(object sender, EventArgs e)
         {
-            if (gameManager.DoCardsMatch())
+            if (GameManager.GameStart)
             {
-                Console.WriteLine("Yes i got here ok");
-                gameManager.RemoveCardsAndPictureBoxes(gameManager.FirstCard);
-                gameManager.RemoveCardsAndPictureBoxes(gameManager.SecondCard);
-                gameManager.LowerCardCount();
-                gameManager.NullCards();
-                //TODO - put the game finishing code here maybe? Also make minutes a part of game manager
-                if (gameManager.IsGameFinished())
+
+
+                if (GameManager.DoCardsMatch())
                 {
-                    MessageBox.Show("Game over", string.Format("You finished the game in{0} minutes and {1} seconds", gameManager.Seconds /60, gameManager.Seconds%60)) ;
+                    Console.WriteLine("Yes i got here ok");
+                    GameManager.RemoveCardsAndPictureBoxes(GameManager.FirstCard);
+                    GameManager.RemoveCardsAndPictureBoxes(GameManager.SecondCard);
+                    GameManager.LowerCardCount(2);
+                    GameManager.NullCards();
+                    //Endgame code
+                    if (GameManager.IsGameFinished())
+                    {
+                        GameManager.EndGame();
+
+                    }
                 }
+                else
+                {
+                    GameManager.FlipCardsBack();
+                    GameManager.NullCards();
+                }
+                WaitTimer.Stop();
             }
-            else
-            {
-                gameManager.FlipCardsBack();
-                gameManager.NullCards();
-            }
-            WaitTimer.Stop();
         }
 
         /// <summary>
@@ -103,9 +131,9 @@ namespace Memory
         /// <param name="e"></param>
         private void GameTimeCounterEvent(object sender, EventArgs e)
         {
-            gameManager.Seconds ++;
-            gameManager.Minutes = (int)Math.Floor((decimal)gameManager.Seconds / 60);
-            lbl_time.Text = gameManager.Minutes.ToString("D2") + ":" + (gameManager.Seconds % 60).ToString("D2") + ":00";
+            GameManager.Seconds++;
+            GameManager.Minutes = (int)Math.Floor((decimal)GameManager.Seconds / 60);
+            lbl_time.Text = GameManager.Minutes.ToString("D2") + ":" + (GameManager.Seconds % 60).ToString("D2") + ":00";
             Console.WriteLine("Tick");
         }
         /// <summary>
@@ -115,10 +143,11 @@ namespace Memory
         /// <param name="e"></param>
         private void NewGameEvent(object sender, EventArgs e)
         {
-            gameManager.SetupBoard();
+            GameManager.SetupBoard();
             GameTimer.Start();
+            GameManager.GameStart = true;
 
-       
+
         }
         /// <summary>
         /// Quits the game when the Quit button is pressed
@@ -129,7 +158,46 @@ namespace Memory
         {
             Application.Exit();
         }
+
+        private void Btn_cheat_Click(object sender, EventArgs e)
+        {
+            if (GameManager.GameStart)
+            {
+                foreach (Card card in GameManager.Deck.UsableDeck)
+                {
+                    GameManager.RemoveCardsAndPictureBoxes(card);
+                    GameManager.LowerCardCount(1);
+                }
+                if (GameManager.IsGameFinished())
+                {
+                    GameManager.EndGame();
+
+                }
+            }   
+        }
+
+        private void Btn_hint_Click(object sender, EventArgs e)
+        {
+  
+            GameManager.ActivateHint();
+        }
+
+        private void HintTick(object sender, EventArgs e)
+        {
+            GameManager.DeactivateHint();
+        }
+
+        private void ShowHighScores(object sender, EventArgs e)
+        {
+            if (!GameManager.GameStart)
+            {
+                highScoreForm.Show();
+                this.Hide();
+            }
+        }
     }
     #endregion
+
+    
 
 }

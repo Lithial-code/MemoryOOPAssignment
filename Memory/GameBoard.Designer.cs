@@ -78,6 +78,8 @@
             this.pb6 = new System.Windows.Forms.PictureBox();
             this.WaitTimer = new System.Windows.Forms.Timer(this.components);
             this.GameTimer = new System.Windows.Forms.Timer(this.components);
+            this.btn_cheat = new System.Windows.Forms.Button();
+            this.HintTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pb1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb3)).BeginInit();
@@ -174,6 +176,7 @@
             this.btn_high_scores.TabIndex = 9;
             this.btn_high_scores.Text = "High Scores";
             this.btn_high_scores.UseVisualStyleBackColor = true;
+            this.btn_high_scores.Click += new System.EventHandler(this.ShowHighScores);
             // 
             // btn_hint
             // 
@@ -183,6 +186,7 @@
             this.btn_hint.TabIndex = 10;
             this.btn_hint.Text = "Hint";
             this.btn_hint.UseVisualStyleBackColor = true;
+            this.btn_hint.Click += new System.EventHandler(this.Btn_hint_Click);
             // 
             // btn_new_game
             // 
@@ -619,11 +623,27 @@
             this.GameTimer.Interval = 1000;
             this.GameTimer.Tick += new System.EventHandler(this.GameTimeCounterEvent);
             // 
+            // btn_cheat
+            // 
+            this.btn_cheat.Location = new System.Drawing.Point(443, 150);
+            this.btn_cheat.Name = "btn_cheat";
+            this.btn_cheat.Size = new System.Drawing.Size(103, 23);
+            this.btn_cheat.TabIndex = 50;
+            this.btn_cheat.Text = "Cheat Win";
+            this.btn_cheat.UseVisualStyleBackColor = true;
+            this.btn_cheat.Click += new System.EventHandler(this.Btn_cheat_Click);
+            // 
+            // HintTimer
+            // 
+            this.HintTimer.Interval = 2000;
+            this.HintTimer.Tick += new System.EventHandler(this.HintTick);
+            // 
             // GameBoard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(569, 532);
+            this.Controls.Add(this.btn_cheat);
             this.Controls.Add(this.pb36);
             this.Controls.Add(this.pb30);
             this.Controls.Add(this.pb24);
@@ -762,6 +782,8 @@
         private System.Windows.Forms.PictureBox pb6;
         private System.Windows.Forms.Timer WaitTimer;
         private System.Windows.Forms.Timer GameTimer;
+        private System.Windows.Forms.Button btn_cheat;
+        private System.Windows.Forms.Timer HintTimer;
     }
 }
 

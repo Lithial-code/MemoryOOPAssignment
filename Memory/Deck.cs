@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Memory
 {
-    class Deck
+    public class Deck
     {
         string _deckBackImageLocation;
         List<Card> _usableDeck;
@@ -18,7 +18,7 @@ namespace Memory
             DeckBackImageLocation = "deck";
             UsableDeck = new List<Card>();
             BuildDeck();
-            
+            UsableDeck = Shuffle(UsableDeck);
         }
 
         public string DeckBackImageLocation { get => _deckBackImageLocation; set => _deckBackImageLocation = value; }
@@ -56,18 +56,22 @@ namespace Memory
             UsableDeck.RemoveAt(position);
         }
 
-        public List<Card> Shuffle()
+        public List<Card> Shuffle(List<Card> deck)
         {
             List<Card> shuffledDeck = new List<Card>();
             Random rand = new Random();
 
             int index = 0;
-            while (_usableDeck.Count > 0)
+            while (deck.Count > 0)
             {
-                index = rand.Next(0, UsableDeck.Count);
+                index = rand.Next(0, deck.Count);
 
                 shuffledDeck.Add(IndexOf(index));
                 RemoveCard(index);
+            }
+            foreach (Card card in shuffledDeck)
+            {
+                Console.WriteLine(card.Name);
             }
             return shuffledDeck;
         }
