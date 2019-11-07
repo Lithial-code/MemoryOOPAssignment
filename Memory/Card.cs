@@ -13,7 +13,12 @@ namespace Memory
         string _imageLocation;
         int _id;
         PictureBox _pb;
-
+        /// <summary>
+        /// Card object. takes in a name, image string and id
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="imageLocation"></param>
+        /// <param name="id"></param>
         public Card(string name, string imageLocation, int id)
         {
             this.Name = name;

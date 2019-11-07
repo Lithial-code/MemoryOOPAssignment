@@ -22,7 +22,10 @@ namespace Memory
 
         }
         public HighScore(int time) : this("", time) { }
-    
+        /// <summary>
+        /// converts seconds to readable min:second time
+        /// </summary>
+        /// <returns></returns>
         public string ToReadable()
         {
             string results = "";
@@ -34,17 +37,7 @@ namespace Memory
             results = string.Format("{0}:{1}:00",mins.ToString("D2"),seconds.ToString("D2"));
             return results;
         }
-        public bool Compare(HighScore score)
-        {
-            if (this.Time > score.Time)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+
         public string Name { get => _name; set => _name = value; }
         public int Time { get => _time; set => _time = value; }
     }

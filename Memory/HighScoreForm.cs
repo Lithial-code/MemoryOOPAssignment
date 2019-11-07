@@ -27,7 +27,9 @@ namespace Memory
         }
 
 
-
+        /// <summary>
+        /// used to pass all the awkward components through to the game manager.
+        /// </summary>
         public void AssembleComponents()
         {
             foreach (Label label in nameLabels)
@@ -39,6 +41,9 @@ namespace Memory
                 GameManager.ScoreLabels.Add(label);
             }
         }
+        /// <summary>
+        /// Used to update highscore labels.
+        /// </summary>
         public void UpdateForm()
         {
             for (int i = 0; i < 10; i++)
@@ -53,10 +58,13 @@ namespace Memory
  
  
         #region events
+        /// <summary>
+        /// high the high score screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuitEvent(object sender, EventArgs e)
         {
-            gameBoard = new GameBoard();
-            gameBoard.Show();
             this.Hide();
         }
         #endregion

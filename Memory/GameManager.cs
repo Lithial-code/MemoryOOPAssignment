@@ -14,12 +14,14 @@ namespace Memory
     {
 
         bool _gameStart;
+        bool _paused;
+        bool _canClick;
 
         int _seconds;
         int _minutes;
         int _cardCount;
 
-        string _playerName;
+    
 
         static Deck _deck;
 
@@ -36,16 +38,17 @@ namespace Memory
         
         public GameManager()
         {
-            Deck = new Deck();
+
             PictureBoxes = new List<PictureBox>() { };
             Labels = new List<Label>();
-            Seconds = 0;
-            CardCount = Deck.Count();
+           
             Timers = new List<Timer>();
             NameLabels = new List<Label>();
             ScoreLabels = new List<Label>();
             HighScores = new List<HighScore>();
-            //LoadScores();
+            Paused = false;
+            CanClick = false;
+            Seconds = 0;
         }
 
         /// <summary>
@@ -53,10 +56,14 @@ namespace Memory
         /// </summary>
         public void SetupBoard()
         {
-            //Deck.UsableDeck = Deck.Shuffle();
+            Seconds = 0;
+            ResetBoard();
+            Deck = new Deck();
+            CardCount = Deck.Count();
             //deal cards
             for (int i = 0; i < Deck.UsableDeck.Count; i++)
             {
+                PictureBoxes[i].Visible = true;
                 Deck.UsableDeck[i].Pb = PictureBoxes[i];
             }
             //reset timer to 0
@@ -64,11 +71,10 @@ namespace Memory
             //reset card count
             Labels[1].Text = CardCount.ToString();
         }
-        public void Start()
-        {
-
-
-        }
+        
+        /// <summary>
+        /// Creates an array of fake high scores to populate the array for testing
+        /// </summary>
         public void AssembleFakeScores()
         {
             for (int i = 0; i < 10; i++)
@@ -78,6 +84,10 @@ namespace Memory
             }
             SaveScores();
         }
+        /// <summary>
+        /// Compares if cards match
+        /// </summary>
+        /// <returns>true if they do false if they dont</returns>
         public bool DoCardsMatch()
         {
             if (!IsGameFinished())
@@ -86,7 +96,10 @@ namespace Memory
             }
             return false;
         }
-
+        /// <summary>
+        /// Changes the background image of a picture box to the the cards image.
+        /// </summary>
+        /// <param name="card">cards image to use</param>
         public void FlipCards(Card card)
         {
             Console.WriteLine("Flip card: " + card.Name);
@@ -94,30 +107,48 @@ namespace Memory
             card.Pb.Image = (Bitmap)Properties.Resources.ResourceManager.GetObject(card.ImageLocation);
             //SecondCard.Pb.Image = (Bitmap)Properties.Resources.ResourceManager.GetObject(SecondCard.ImageLocation);
         }
+        /// <summary>
+        /// resets the image back to null
+        /// </summary>
         public void FlipCardsBack()
         {
             Console.WriteLine("Flip cards back");
             if (!IsGameFinished())
             {
-                FirstCard.Pb.Image = Properties.Resources.deck;
-                SecondCard.Pb.Image = Properties.Resources.deck;
+                FirstCard.Pb.Image = null;
+                SecondCard.Pb.Image = null;
             }
         }
+        /// <summary>
+        /// clears the placeholder card slots
+        /// </summary>
         public void NullCards()
         {
             FirstCard = null;
             SecondCard = null;
         }
+        /// <summary>
+        /// Removes and disables the pictureboxes so they are unseen
+        /// </summary>
+        /// <param name="card"></param>
         public void RemoveCardsAndPictureBoxes(Card card)
         {
             card.Pb.Enabled = false;
             card.Pb.Visible = false;
         }
+        /// <summary>
+        /// Lowers the card count variable by the input
+        /// </summary>
+        /// <param name="cardsKilled"></param>
         public void LowerCardCount(int cardsKilled)
         {
             CardCount -= cardsKilled;
             Labels[1].Text = CardCount.ToString();
         }
+        /// <summary>
+        /// Checks if game is finished
+        /// </summary>
+        /// <returns>true if card count is 0</returns>
         public bool IsGameFinished()
         {
             if (CardCount == 0)
@@ -128,9 +159,12 @@ namespace Memory
             }
             return false;
         }
+        /// <summary>
+        /// Flips all cards over for 2 seconds. Uses Timer[1]
+        /// </summary>
         public void ActivateHint()
         {
-            if (GameStart)
+            if (GameStart && CanClick)
             {
                 Timers[1].Start();
                 foreach (Card card in Deck.UsableDeck)
@@ -140,28 +174,34 @@ namespace Memory
             }
          
         }
+        /// <summary>
+        /// Undoes hint image change and stops timer[1]
+        /// </summary>
         public void DeactivateHint()
         {
             foreach (Card card in Deck.UsableDeck)
             {
-                card.Pb.Image = Properties.Resources.deck;
+                card.Pb.Image = null;
             }
             Timers[1].Stop();
         }
+        /// <summary>
+        /// Doesnt actually check score. Instead adds to highscore list and shows high score forms
+        /// </summary>
+        /// <param name="name">player name</param>
         public void CheckBestScore(string name)
         {
             HighScore highScore = new HighScore(name,Seconds);
             HighScores.Add(highScore);
 
             RecordLabels();
-        
+            
             GameBoard.highScoreForm.Show();
             SaveScores();
         }
-        public void RecordTopScore()
-        {
-
-        }
+ /// <summary>
+ /// method for saving the scores from json
+ /// </summary>
         public void SaveScores()
         {
             for (int i = HighScores.Count-1; i > 10 ; i--)
@@ -173,6 +213,9 @@ namespace Memory
             writer.Write(data);
             writer.Close();
         }
+        /// <summary>
+        /// method for loading the scores from json
+        /// </summary>
         public void LoadScores()
         {
             try
@@ -193,6 +236,9 @@ namespace Memory
      
             RecordLabels();
          }
+        /// <summary>
+        /// Sorts high score list then dumps them into the appropriate labels
+        /// </summary>
         public void RecordLabels()
         {
             int cap = 10;
@@ -214,27 +260,32 @@ namespace Memory
                 }
             }    
         }
+        /// <summary>
+        /// Called at the end of the game. Stops the game timer and asks for player name. then calls CheckBestScore to do high score stuff at the end
+        /// </summary>
         public void EndGame()
         {
             Timers[0].Stop();
+            GameStart = false;
             Console.WriteLine("Endgame");
             string UserAnswer = Microsoft.VisualBasic.Interaction.InputBox("Please Enter Your Name:  ", "You Win", "name:");
-            CheckBestScore(UserAnswer);
-
+            CheckBestScore(UserAnswer);   
         }
+        /// <summary>
+        /// Resets the picture boxes to their default state
+        /// </summary>
         public void ResetBoard()
         {
             foreach (PictureBox pictureBox in _pictureBoxes)
             {
                 pictureBox.Enabled = true;
                 pictureBox.Visible = true;
-                pictureBox.Image = Properties.Resources.deck;
+                pictureBox.BackgroundImage = Properties.Resources.DragonCardBack;
+                pictureBox.BackgroundImageLayout = ImageLayout.Stretch;
+                
             }
         }
 
-        ////////////////////////////////////////////////////////////////
-        //Added after planning
-        ////////////////////////////////////////////////////////////////
         #region getters and setters
         public Card FirstCard { get => _firstCard; set => _firstCard = value; }
         public Card SecondCard { get => _secondCard; set => _secondCard = value; }
@@ -257,9 +308,16 @@ namespace Memory
         public static List<Label> NameLabels { get => _nameLabels; set => _nameLabels = value; }
         public static List<Label> ScoreLabels { get => _scoreLabels; set => _scoreLabels = value; }
         public static List<HighScore> HighScores { get => _highScores; set => _highScores = value; }
+        public bool Paused { get => _paused; set => _paused = value; }
+        public bool CanClick { get => _canClick; set => _canClick = value; }
 
         #endregion
         #region odd methods
+        /// <summary>
+        /// Takes in a picture box and returns the associated card.
+        /// </summary>
+        /// <param name="pb"></param>
+        /// <returns></returns>
         public Card CardByPBID(PictureBox pb)
         {
             for (int i = 0; i < _pictureBoxes.Count; i++)
@@ -274,7 +332,12 @@ namespace Memory
             return null;
         }
 
-   
+        /// <summary>
+        /// Used to deserialize list of cards
+        /// </summary>
+        /// <typeparam name="T">Should be card type</typeparam>
+        /// <param name="path">data path</param>
+        /// <returns></returns>
         public List<T> Deserialize<T>(string path)
         {
             return JsonConvert.DeserializeObject<List<T>>(path);

@@ -12,11 +12,10 @@ namespace Memory
     {
 
         public GameManager GameManager;
-        List<PictureBox> pictureBoxes;
+        readonly List<PictureBox> pictureBoxes;
         public static HighScoreForm highScoreForm;
-
-        List<Label> _nameLabels;
-        List<Label> _scoreLabels;
+        
+   
 
         //internal GameManager GameManager { get => GameManager; set => GameManager = value; }
 
@@ -25,9 +24,9 @@ namespace Memory
             InitializeComponent();
             this.MinimumSize = this.Size;
             this.MaximumSize = this.Size;
+          
             GameManager = new GameManager();
             pictureBoxes = new List<PictureBox>() { pb1, pb2, pb3, pb4, pb5, pb6, pb7, pb8, pb9, pb10, pb11, pb12, pb13, pb14, pb15, pb16, pb17, pb18, pb19, pb20, pb21, pb22, pb23, pb24, pb25, pb26, pb27, pb28, pb29, pb30, pb31, pb32, pb33, pb34, pb35, pb36 };
-          
             highScoreForm = new HighScoreForm();
             AssembleComponents();
             GameManager.LoadScores();
@@ -64,7 +63,7 @@ namespace Memory
         /// <param name="e"></param>
         private void CardClickEvent(object sender, EventArgs e)
         {
-            if (GameManager.GameStart)
+            if (GameManager.GameStart && GameManager.CanClick)
             {
 
 
@@ -97,7 +96,7 @@ namespace Memory
         /// <param name="e"></param>
         private void CardFlipTimerEvent(object sender, EventArgs e)
         {
-            if (GameManager.GameStart)
+            if (GameManager.GameStart && GameManager.CanClick)
             {
 
 
@@ -143,10 +142,11 @@ namespace Memory
         /// <param name="e"></param>
         private void NewGameEvent(object sender, EventArgs e)
         {
+
             GameManager.SetupBoard();
             GameTimer.Start();
             GameManager.GameStart = true;
-
+            GameManager.CanClick = true;
 
         }
         /// <summary>
@@ -158,10 +158,14 @@ namespace Memory
         {
             Application.Exit();
         }
-
+        /// <summary>
+        /// Cheat button for instant win
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_cheat_Click(object sender, EventArgs e)
         {
-            if (GameManager.GameStart)
+            if (GameManager.GameStart && GameManager.CanClick)
             {
                 foreach (Card card in GameManager.Deck.UsableDeck)
                 {
@@ -175,25 +179,55 @@ namespace Memory
                 }
             }   
         }
-
+        /// <summary>
+        /// Hint button event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_hint_Click(object sender, EventArgs e)
         {
   
             GameManager.ActivateHint();
         }
-
+        /// <summary>
+        /// Hint timer on tick method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HintTick(object sender, EventArgs e)
         {
             GameManager.DeactivateHint();
         }
-
+        /// <summary>
+        /// Opens high score screen
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ShowHighScores(object sender, EventArgs e)
         {
             if (!GameManager.GameStart)
             {
                 highScoreForm.Show();
-                this.Hide();
             }
+        }
+
+        private void Pause(object sender, EventArgs e)
+        {
+           
+            if (GameManager.GameStart)
+            {
+                GameManager.CanClick = !GameManager.CanClick;
+                GameManager.Paused = !GameManager.Paused;
+                if (GameManager.Paused)
+                {
+                    GameTimer.Stop();
+                }
+                else
+                {
+                    GameTimer.Start();
+                }
+            }
+       
         }
     }
     #endregion

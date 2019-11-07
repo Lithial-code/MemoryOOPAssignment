@@ -14,7 +14,6 @@ namespace Memory
 
         public Deck()
         {
-            //TODO add a better deck backing
             DeckBackImageLocation = "deck";
             UsableDeck = new List<Card>();
             BuildDeck();
@@ -23,7 +22,10 @@ namespace Memory
 
         public string DeckBackImageLocation { get => _deckBackImageLocation; set => _deckBackImageLocation = value; }
         public List<Card> UsableDeck { get => _usableDeck; set => _usableDeck = value; }
-
+      
+        /// <summary>
+        /// adds all cards twice to the deck
+        /// </summary>
         public void BuildDeck()
         {
             for (int i = 0; i < 18; i++)
@@ -37,25 +39,44 @@ namespace Memory
                 UsableDeck.Add(card);
             }
         }
+        /// <summary>
+        /// usabledeck.count
+        /// </summary>
+        /// <returns></returns>
         public int Count()
         {
             return UsableDeck.Count;
         }
-
+        /// <summary>
+        /// index of card in deck
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public Card IndexOf(int position)
         {
             return UsableDeck[position];
         }
-        
+        /// <summary>
+        /// add card to deck
+        /// </summary>
+        /// <param name="card"></param>
         public void AddCard(Card card)
         {
             UsableDeck.Add(card);
         }
+        /// <summary>
+        /// Removes card from deck
+        /// </summary>
+        /// <param name="position"></param>
         public void RemoveCard(int position)
         {
             UsableDeck.RemoveAt(position);
         }
-
+        /// <summary>
+        /// Shuffle deck passed in and return it.
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
         public List<Card> Shuffle(List<Card> deck)
         {
             List<Card> shuffledDeck = new List<Card>();
